@@ -8,7 +8,8 @@ setup(
     author='ccdc',
     author_email='titieiti.com@gmail.com',
     license='js',
-    package=['sinabro'],
+    py_modules=['sinabro'],
+    packages=['sinabro'],
     zip_safe=False,
     install_requires=[],
 )

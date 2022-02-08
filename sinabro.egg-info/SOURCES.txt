@@ -1,0 +1,8 @@
+setup.py
+sinabro/__init__.py
+sinabro/coco_tools.py
+sinabro.egg-info/PKG-INFO
+sinabro.egg-info/SOURCES.txt
+sinabro.egg-info/dependency_links.txt
+sinabro.egg-info/not-zip-safe
+sinabro.egg-info/top_level.txt
