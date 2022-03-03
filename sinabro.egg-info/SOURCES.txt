@@ -1,8 +1,16 @@
 setup.py
 sinabro/__init__.py
-sinabro/coco_tools.py
+sinabro/hihi.py
 sinabro.egg-info/PKG-INFO
 sinabro.egg-info/SOURCES.txt
 sinabro.egg-info/dependency_links.txt
 sinabro.egg-info/not-zip-safe
+sinabro.egg-info/requires.txt
 sinabro.egg-info/top_level.txt
+sinabro/dataset/__init__.py
+sinabro/dataset/coco/__init__.py
+sinabro/dataset/coco/tools.py
+sinabro/image/__init__.py
+sinabro/image/tools.py
+sinabro/misc/__init__.py
+sinabro/misc/files.py
