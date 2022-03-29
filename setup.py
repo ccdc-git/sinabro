@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="sinabro",
-    version="0.0.1",
+    version="0.0.2",
     description="sinabro tools",
     url="https://github.com/ccdc-git/sinabro.git",
     author="ccdc",

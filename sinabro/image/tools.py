@@ -2,18 +2,23 @@ import math
 
 import cv2
 import numpy as np
-import imutils
 
 
-def rotate_dot(dot, degree, height=0):
+def rotate_dot(dot, degree, height=0, width=0):
     x, y = dot
     degree = math.radians(degree)
     sin_theta = math.sin(degree)
     cos_theta = math.cos(degree)
+    x_offset = max(height * sin_theta, 0) - min(width * cos_theta, 0)
+    y_offset = -min(height * cos_theta, 0) - min(width * sin_theta, 0)
     return (
-        int(x * cos_theta - y * sin_theta + height * sin_theta),
-        int(x * sin_theta + y * cos_theta),
+        int(x * cos_theta - y * sin_theta + x_offset),
+        int(x * sin_theta + y * cos_theta + y_offset),
     )
+
+
+def rotate_dots(dots, degree, height=0, width=0):
+    return np.array([rotate_dot(dot, degree, height, width) for dot in dots])
 
 
 def find_bbox(segmentation):
@@ -32,12 +37,15 @@ def find_bbox(segmentation):
     return (xmin, ymin, xmax, ymax)
 
 
-def put_into_image(background, foreground, segmentation, c_x, c_y, r_w, r_h, degree):
+def put_into_image(background, foreground, segmentation, c_x, c_y, r_size, degree):
     # rotate foreground image and segmentation with {rotate} degree
     assert c_x < background.shape[1]
     assert c_y < background.shape[0]
     segmentation = np.array(
-        [rotate_dot(dot, degree, foreground.shape[0]) for dot in segmentation]
+        [
+            rotate_dot(dot, degree, foreground.shape[0], foreground.shape[1])
+            for dot in segmentation
+        ]
     )
     foreground = imutils.rotate_bound(foreground, degree)
 
@@ -46,32 +54,33 @@ def put_into_image(background, foreground, segmentation, c_x, c_y, r_w, r_h, deg
     mask = cv2.fillPoly(mask, [segmentation], 255)
 
     # crop bbox from foreground
+    back_h, back_w, _ = background.shape
     xmin, ymin, xmax, ymax = find_bbox(segmentation)
     img_w = xmax - xmin
     img_h = ymax - ymin
 
-    left = int(c_x - img_w / 2)
-    right = int(c_x + img_w / 2)
-    top = int(c_y - img_h / 2)
-    bottom = int(c_y + img_h / 2)
+    size_fact = max(back_h / img_h, back_w / img_w) * r_size
 
-    if c_x < img_w / 2:
-        xmin = xmin + img_w / 2 - c_x
+    left = int((c_x - img_w * size_fact / 2))
+    right = int((c_x + img_w * size_fact / 2))
+    top = int((c_y - img_h * size_fact / 2))
+    bottom = int((c_y + img_h * size_fact / 2))
+
+    if left < 0:
+        xmin = int(xmin - left / size_fact)
         left = 0
 
-    if c_y < img_h / 2:
-        ymin = ymin + img_h / 2 - c_y
+    if top < 0:
+        ymin = int(ymin - top / size_fact)
         top = 0
 
-    if c_x + img_w / 2 > background.shape[1]:
-        xmax = xmax - (c_x + img_w / 2 - background.shape[1])
+    if right > background.shape[1]:
+        xmax = int(xmax - (right - back_w) / size_fact)
         right = background.shape[1]
 
-    if c_y + img_h / 2 > background.shape[0]:
-        ymax = ymax - (c_y + img_h / 2 - background.shape[0])
+    if bottom > background.shape[0]:
+        ymax = int(ymax - (bottom - back_h) / size_fact)
         bottom = background.shape[0]
-
-    xmin, xmax, ymin, ymax = map(int, (xmin, xmax, ymin, ymax))
 
     cropped_img = foreground[ymin:ymax, xmin:xmax]
     cropped_mask = mask[ymin:ymax, xmin:xmax]

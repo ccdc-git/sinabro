@@ -1,6 +1,5 @@
 setup.py
 sinabro/__init__.py
-sinabro/hihi.py
 sinabro.egg-info/PKG-INFO
 sinabro.egg-info/SOURCES.txt
 sinabro.egg-info/dependency_links.txt
@@ -9,8 +8,14 @@ sinabro.egg-info/requires.txt
 sinabro.egg-info/top_level.txt
 sinabro/dataset/__init__.py
 sinabro/dataset/coco/__init__.py
+sinabro/dataset/coco/coco_maker.py
 sinabro/dataset/coco/tools.py
+sinabro/dataset/yolo/__init__.py
+sinabro/dataset/yolo/tools.py
 sinabro/image/__init__.py
+sinabro/image/process.py
 sinabro/image/tools.py
 sinabro/misc/__init__.py
 sinabro/misc/files.py
+sinabro/utils/__init__.py
+sinabro/utils/metric.py
