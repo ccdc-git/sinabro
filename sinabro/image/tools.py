@@ -2,6 +2,7 @@ import math
 
 import cv2
 import numpy as np
+import imutils
 
 
 def rotate_dot(dot, degree, height=0, width=0):

@@ -33,7 +33,7 @@ class COCOImage:
         return {k: v for k, v in self.__dict__.items() if k not in ["annotations"]}
 
 
-class AnnoMaker:
+class COCOMaker:
     def __init__(self, category_map: dict):
         self._data: dict[str, COCOImage] = {}
         self._category_map = category_map
